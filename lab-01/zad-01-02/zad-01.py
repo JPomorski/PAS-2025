@@ -1,5 +1,5 @@
 import shutil
 
-filename = input()
+filename = input("Enter file name: ")
 
 shutil.copy(filename, "lab1zad1.txt")
