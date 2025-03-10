@@ -21,7 +21,7 @@ def recv_all(sock, message_length):
             break
 
         bytes_received += len(chunk)
-        message += chunk
+        message += chunk.decode()
 
     return message
 
