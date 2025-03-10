@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import socket, select, sys
+import socket, sys
 from time import gmtime, strftime
 
 HOST = '127.0.0.1'
@@ -21,12 +21,12 @@ try:
 
         data, address = sock.recvfrom(4096)
 
-        print('[%s] Received %s bytes from client %s. Data: %s') % (
-        strftime("%Y-%m-%d %H:%M:%S", gmtime()), len(data), address, data)
+        print('[%s] Received %s bytes from client %s. Data: %s' % (
+        strftime("%Y-%m-%d %H:%M:%S", gmtime()), len(data), address, data))
 
         if data:
             sent = sock.sendto(data, address)
-            print('[%s] Sent %s bytes bytes back to client %s.') % (
-            strftime("%Y-%m-%d %H:%M:%S", gmtime()), sent, address)
+            print('[%s] Sent %s bytes bytes back to client %s.' % (
+            strftime("%Y-%m-%d %H:%M:%S", gmtime()), sent, address))
 finally:
     sock.close()
