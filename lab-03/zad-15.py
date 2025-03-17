@@ -21,16 +21,22 @@ print(version)
 
 source_address = get_bytes(data_bytes, 4, 12)
 destination_address = get_bytes(data_bytes, 4, 16)
-data = data_bytes[40:]
+protocol_type = get_bytes(data_bytes, 1, 9)
 
-# source_address = int("".join(source_address), 16)
-# destination_address = int("".join(destination_address), 16)
-# data = bytes.fromhex("".join(data)).decode()
+source_address = ".".join([str(int(address, 16)) for address in source_address])
+destination_address = ".".join([str(int(address, 16)) for address in destination_address])
+protocol_type = int("".join(protocol_type), 16)
+print(protocol_type)
+
+source_port = get_bytes(data_bytes, 2, 20)
+destination_port = get_bytes(data_bytes, 2, 22)
+data = data_bytes[52:]
+
+source_port = int("".join(source_port), 16)
+destination_port = int("".join(destination_port), 16)
+data = bytes.fromhex("".join(data)).decode()
 
 print(source_address, destination_address, data)
-
-message = f"zad13odp;src;{source_address};dst;{destination_address};data;{data}"
-print(message)
 
 # HOST = "212.182.24.27"
 HOST = "127.0.0.1"
@@ -40,13 +46,26 @@ server_address = (HOST, PORT)
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 try:
+    message = f"zad15odpA;ver;{version};srcip;{source_address};dstip;{destination_address};type;{protocol_type}"
+    print(message)
+
     sock.sendto(message.encode(), server_address)
 
-    data, _ = sock.recvfrom(1024)
-    print(f"Server response: {data.decode()}")
+    recv_data, _ = sock.recvfrom(1024)
+    response = recv_data.decode()
+
+    print(f"Server response: {response}")
+
+    if response == "TAK":
+        message = f"zad15odpB;srcport;{source_port};dstport;{destination_port};data;{data}"
+        print(message)
+
+        sock.sendto(message.encode(), server_address)
+
+        recv_data, _ = sock.recvfrom(1024)
+        print(f"Server response: {recv_data.decode()}")
 
 except socket.error as e:
     print(e)
 
 sock.close()
-
