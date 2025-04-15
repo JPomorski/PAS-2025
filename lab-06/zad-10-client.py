@@ -1,0 +1,59 @@
+import base64
+import telnetlib
+import time
+
+HOST = "127.0.0.1"
+PORT = 2525
+
+USERNAME = "nadawca@interia.pl"
+PASSWORD = ""
+
+MAIL_FROM = "nadawca@interia.pl"
+RCPT_TO = ["odbiorca1@interia.pl", "odbiorca2@interia.pl", "odbiorca3@interia.pl"]
+SUBJECT = "Testowa wiadomość dla sztucznego serwera"
+BODY = ":33333"
+
+
+def send_command(tn, command, wait=1):
+    print("C:", command.strip())
+    tn.write(command.encode('utf-8'))
+    time.sleep(wait)
+    response = tn.read_very_eager().decode('utf-8')
+    print("S:", response)
+    return response
+
+
+tn = telnetlib.Telnet(HOST, PORT)
+
+print("Banner:", tn.read_until(b"\n").decode('utf-8'))
+
+send_command(tn, "EHLO localhost\r\n")
+
+send_command(tn, "AUTH LOGIN\r\n")
+
+username_b64 = base64.b64encode(USERNAME.encode('utf-8')).decode('utf-8')
+send_command(tn, username_b64 + "\r\n")
+
+password_b64 = base64.b64encode(PASSWORD.encode('utf-8')).decode('utf-8')
+send_command(tn, password_b64 + "\r\n")
+
+send_command(tn, f"MAIL FROM:<{MAIL_FROM}>\r\n")
+
+for recipient in RCPT_TO:
+    send_command(tn, f"RCPT TO:<{recipient}>\r\n")
+
+send_command(tn, "DATA\r\n")
+
+message = (
+    f"From: {MAIL_FROM}\r\n"
+    f"To: {", ".join(RCPT_TO)}\r\n"
+    f"Subject: {SUBJECT}\r\n"
+    "\r\n"
+    f"{BODY}\r\n"
+)
+
+send_command(tn, message)
+
+send_command(tn, "QUIT\r\n")
+
+tn.close()
