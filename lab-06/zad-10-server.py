@@ -2,7 +2,10 @@ import socket
 import base64
 
 HOST = "127.0.0.1"
-PORT = 2525
+PORT = 1100
+
+USERNAME = "nadawca@interia.pl"
+PASSWORD = ""
 
 server_address = (HOST, PORT)
 
@@ -19,7 +22,9 @@ while True:
 
     client_socket.send(b"220 SMTP Localhost\r\n")
 
-    authenticated = False
+    username_provided = False
+    password_provided = False
+    temp_username = ""
 
     while True:
         data = client_socket.recv(1024)
@@ -33,18 +38,34 @@ while True:
             client_socket.send(b"250-Hello\r\n250-AUTH LOGIN\r\n250 OK\r\n")
 
         elif command == "AUTH LOGIN":
-            client_socket.send(b"334 VXNlcm5hbWU6\r\n")  # "Username:"
-        elif not authenticated:
+            client_socket.send(b"334 VXNlcm5hbWU6\r\n")
+
+        elif not username_provided:
             try:
-                base64.b64decode(command).decode('utf-8')
-                client_socket.send(b"334 UGFzc3dvcmQ6\r\n")  # "Password:"
+                temp_username = base64.b64decode(command).decode('utf-8')
+                client_socket.send(b"334 UGFzc3dvcmQ6\r\n")
+                username_provided = True
 
-                base64.b64decode(command).decode('utf-8')
-                client_socket.send(b"235 Authentication successful\r\n")
-
-                authenticated = True
             except Exception as e:
-                client_socket.send(b"500 Invalid base64 input\r\n")
+                client_socket.send(b"500 Invalid base64 for username\r\n")
+                username_provided = False
+                print(e)
+
+        elif not password_provided:
+            try:
+                temp_password = base64.b64decode(command).decode('utf-8')
+
+                if temp_username == USERNAME and temp_password == PASSWORD:
+                    client_socket.send(b"235 Authentication successful\r\n")
+                    password_provided = True
+                else:
+                    client_socket.send(b"535 Authentication credentials invalid\r\n")
+                    username_provided = False
+                    password_provided = False
+
+            except Exception as e:
+                client_socket.send(b"500 Invalid base64 for password\r\n")
+                password_provided = False
                 print(e)
 
         elif command.startswith("MAIL FROM:"):
@@ -54,7 +75,7 @@ while True:
             client_socket.send(b"250 OK\r\n")
 
         elif command == "DATA":
-            client_socket.send(b"354 End data with <CR><LF>.<CR><LF>\r\n")
+            client_socket.send(b"354 End data with <CRLF>.<CRLF>\r\n")
             message_data = client_socket.recv(1024).decode('utf-8')
 
             print("Received email:")
