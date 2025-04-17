@@ -55,15 +55,14 @@ sock.bind((HOST, PORT))
 
 sock.listen(1)
 
-print(f"POP3 Server listening on {HOST}:{PORT}")
-
+print(f"POP3 server listening on {HOST}:{PORT}")
 
 while True:
     client_socket, client_address = sock.accept()
 
     print(f"Connection from {client_address}")
 
-    client_socket.sendall(b"+OK Mock POP3 Server Ready\r\n")
+    client_socket.sendall(b"+OK POP3 server ready\r\n")
 
     authorized = False
 
@@ -71,6 +70,7 @@ while True:
         data = client_socket.recv(1024)
         if not data:
             break
+
         command = data.decode().strip()
         print(f"Received: {command}")
 
