@@ -8,10 +8,10 @@ MOCK_PASSWORD = "123"
 
 
 def send_command(command, timeout=5):
-    print("C: ", command.strip().decode())
+    print("C:", command.strip().decode())
     tn.write(command)
     response = tn.read_until(b".\r\n", timeout)
-    print("S: ", response.decode())
+    print("S:", response.decode())
     return response
 
 
@@ -43,5 +43,5 @@ for message in message_list:
 
 send_command(f"RETR {max_index}\r\n".encode())
 
-tn.write(b"QUIT\r\n")
+send_command(b"QUIT\r\n")
 tn.close()

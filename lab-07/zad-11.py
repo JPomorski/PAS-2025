@@ -10,7 +10,7 @@ MOCK_PASSWORD = "123"
 
 
 def send_command(command, timeout=5):
-    print("C: ", command.strip().decode())
+    print("C:", command.strip().decode())
     tn.write(command)
 
     if command.decode().upper().startswith("RETR"):
@@ -18,7 +18,7 @@ def send_command(command, timeout=5):
     else:
         response = tn.read_until(b"\r\n", timeout)
 
-    print("S: ", response.decode())
+    print("S:", response.decode())
     return response
 
 
@@ -47,9 +47,9 @@ base64_data = base64_match.group(1).strip() if base64_match else None
 if base64_data:
     with open(filename, "wb") as f:
         f.write(base64.b64decode(base64_data))
-    print(f"Saved attachment as {filename}")
+    print(f"Saved attachment as {filename}\r\n")
 else:
-    print("No base64 data found.")
+    print("No base64 data found\r\n")
 
-tn.write(b"QUIT\r\n")
+send_command(b"QUIT\r\n")
 tn.close()
