@@ -1,0 +1,14 @@
+telnet 127.0.0.1 1100
+
+A1 LOGIN student 123
+
+A2 LIST "" *
+
+A3 SELECT INBOX
+
+A4 FETCH 1 BODY[]
+
+A5 STORE 1 +FLAGS (\Seen)
+
+A6 LOGOUT
+
