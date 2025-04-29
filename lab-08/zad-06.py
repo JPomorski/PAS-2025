@@ -151,10 +151,10 @@ while True:
                     break
 
             operator = args[last_number + 1]
-            flags = args[last_number + 2:]
+            flags = ' '.join(args[last_number + 2:])
 
-            for i, flag in enumerate(flags):
-                flags[i] = flag.replace("(", "").replace(")", "")
+            flags = flags.replace("(", "").replace(")", "")
+            flags = flags.split()
 
             for i, mail in enumerate(MESSAGES[selected]):
                 if i in indices:
