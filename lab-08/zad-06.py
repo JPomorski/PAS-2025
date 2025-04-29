@@ -153,6 +153,9 @@ while True:
             operator = args[last_number + 1]
             flags = args[last_number + 2:]
 
+            for i, flag in enumerate(flags):
+                flags[i] = flag.replace("(", "").replace(")", "")
+
             for i, mail in enumerate(MESSAGES[selected]):
                 if i in indices:
                     if operator.upper() == "+FLAGS":

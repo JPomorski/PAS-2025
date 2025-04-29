@@ -29,7 +29,7 @@ sock.recv(1024)
 
 send_command("A1 LOGIN student 123\r\n")
 
-mailbox_list = send_command("A2 LIST\r\n")
+mailbox_list = send_command("A2 LIST \"\" *\r\n")
 
 mailboxes = []
 

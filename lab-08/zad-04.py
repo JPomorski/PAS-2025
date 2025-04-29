@@ -56,7 +56,7 @@ unseen_indices = unseen_messages[2:]
 
 send_using_tag("A4", f"A4 FETCH {' '.join(unseen_indices)} BODY[]\r\n")
 
-send_command(f"A5 STORE {' '.join(unseen_indices)} +FLAGS \\Seen\r\n")
+send_command(f"A5 STORE {' '.join(unseen_indices)} +FLAGS (\\Seen)\r\n")
 
 send_command("A6 SEARCH UNSEEN\r\n")
 

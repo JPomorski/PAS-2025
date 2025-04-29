@@ -33,7 +33,7 @@ send_command("A2 SELECT Inbox\r\n")
 
 send_command("A3 SEARCH DELETED\r\n")
 
-send_command(f"A4 STORE 1 2 +FLAGS \\Deleted\r\n")
+send_command(f"A4 STORE 1 2 +FLAGS (\\Deleted)\r\n")
 
 send_command("A5 SEARCH DELETED\r\n")
 
