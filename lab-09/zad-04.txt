@@ -1,0 +1,69 @@
+Formularza nie da się wypełnić z poziomu przeglądarki, użyłem zatem polecenia curl:
+
+curl -X POST http://httpbin.org/post -d "name=Jan&email=jan@example.com"
+
+Poniżej znajdują się dane z Wiresharka:
+
+Żądanie:
+
+Hypertext Transfer Protocol
+    POST /post HTTP/1.1\r\n
+    Host: httpbin.org\r\n
+    User-Agent: curl/8.9.1\r\n
+    Accept: */*\r\n
+    Content-Length: 30\r\n
+    Content-Type: application/x-www-form-urlencoded\r\n
+    \r\n
+    [Full request URI: http://httpbin.org/post]
+    File Data: 30 bytes
+HTML Form URL Encoded: application/x-www-form-urlencoded
+    Form item: "name" = "Jan"
+        Key: name
+        Value: Jan
+    Form item: "email" = "jan@example.com"
+        Key: email
+        Value: jan@example.com
+
+
+Odpowiedź:
+
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+    Date: Tue, 06 May 2025 19:23:01 GMT\r\n
+    Content-Type: application/json\r\n
+    Content-Length: 457\r\n
+    Connection: keep-alive\r\n
+    Server: gunicorn/19.9.0\r\n
+    Access-Control-Allow-Origin: *\r\n
+    Access-Control-Allow-Credentials: true\r\n
+    \r\n
+    [Request in frame: 345]
+    [Time since request: 30.859114000 seconds]
+    [Request URI: /post]
+    [Full request URI: http://httpbin.org/post]
+    File Data: 457 bytes
+JavaScript Object Notation: application/json
+    Object
+        Member: args
+        Member: data
+        Member: files
+        Member: form
+            Object
+                Member: email
+                    [Path with value: /form/email:jan@example.com]
+                    [Member with value: email:jan@example.com]
+                    String value: jan@example.com
+                    Key: email
+                    [Path: /form/email]
+                Member: name
+                    [Path with value: /form/name:Jan]
+                    [Member with value: name:Jan]
+                    String value: Jan
+                    Key: name
+                    [Path: /form/name]
+            Key: form
+            [Path: /form]
+        Member: headers
+        Member: json
+        Member: origin
+        Member: url
